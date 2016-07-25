@@ -1,4 +1,4 @@
 ==================
 Selecting Matcher
 ==================
-.. autofunction:: magellan.select_matcher
+.. autofunction:: magellan.matcherselector.mlmatcherselection.select_matcher

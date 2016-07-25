@@ -1,4 +1,4 @@
 ============
 Downsampling
 ============
-.. autofunction:: magellan.down_sample
+.. autofunction:: magellan.sampler.down_sample.down_sample
