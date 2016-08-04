@@ -1,3 +1,3 @@
 PyPrind >= 2.9.3
-py_stringmatching
 py_stringsimjoin
+py_stringmatching
