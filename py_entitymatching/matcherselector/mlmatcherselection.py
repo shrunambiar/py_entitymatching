@@ -73,10 +73,14 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     # Finally, append the score.
     header.append('Mean score')
 
+    # Use KFold function from scikit learn to create a cv object that can be
+    # used for cross_validation function.
+    cv = KFold(len(y), k, shuffle=True, random_state=random_state)
+
     for m in matchers:
         # Use scikit learn's cross validation to get the matcher and the list
         #  of scores (one for each fold).
-        matcher, scores = cross_validation(m, x, y, metric, k, random_state)
+        matcher, scores = cross_validation(m, x, y, metric, cv)
         # Fill a dictionary based on the matcher and the scores.
         val_list = [matcher.get_name(), matcher, k]
         val_list.extend(scores)
@@ -99,13 +103,10 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     return res
 
 
-def cross_validation(matcher, x, y, metric, k, random_state):
+def cross_validation(matcher, x, y, metric, cv):
     """
     The function does cross validation for a single matcher
     """
-    # Use KFold function from scikit learn to create a cv object that can be
-    # used for cross_val_score function.
-    cv = KFold(len(y), k, shuffle=True, random_state=random_state)
     # Call the scikit-learn's cross_val_score function
     scores = cross_val_score(matcher.clf, x, y, scoring=metric, cv=cv)
     # Finally, return the matcher along with the scores.
