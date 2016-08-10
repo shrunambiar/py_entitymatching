@@ -1,4 +1,4 @@
-_id,ltable_id,rtable_id,label
+_id,ltable_id,rtable_id,gold
 0,journals/sigmod/Ioannidis96,245890,1
 1,conf/vldb/BouganimFV96,673330,1
 2,journals/vldb/AntoshenkovZ96,280357,0

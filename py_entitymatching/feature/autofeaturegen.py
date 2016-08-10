@@ -428,6 +428,9 @@ def _get_feat_lkp_tbl():
                                      ('cosine', 'dlm_dc0', 'dlm_dc0'),
                                      ('monge_elkan'), ('lev_dist'), ('lev_sim')]
 
+    # lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+    #                                  ('cosine', 'dlm_dc0', 'dlm_dc0'),
+    #                                  ('monge_elkan')]
     # Features for type str_gt_10w
     lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
                                   ('cosine', 'dlm_dc0', 'dlm_dc0')]
@@ -435,6 +438,9 @@ def _get_feat_lkp_tbl():
     # Features for NUMERIC type
     lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev_dist'),
                            ('lev_sim')]
+
+    # lookup_table['NUM'] = [('exact_match')]
+
 
     # Features for BOOLEAN type
     lookup_table['BOOL'] = [('exact_match')]
