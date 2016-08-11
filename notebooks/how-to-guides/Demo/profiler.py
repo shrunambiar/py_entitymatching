@@ -37,7 +37,7 @@ def profile_table(df, attribute, plot=True):
         d.sort_index(inplace=True)
         ax = sns.barplot(x="index", y=attribute, data=(
         pd.DataFrame(df[attribute].value_counts())).reset_index())
-        ax.set(xlabel='count', ylabel=attribute)
+        ax.set(xlabel=attribute, ylabel='count')
         ax.grid(b=True, which='major', color='w', linewidth=1.0)
         ax.set_xticklabels(labels=d.index.values, rotation=90)
         plt.show()
