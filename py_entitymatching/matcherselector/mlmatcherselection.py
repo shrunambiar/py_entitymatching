@@ -60,7 +60,7 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     """
     # Based on the input, get the x, y data that can be used to call the
     # scikit-learn's cross validation method
-    x, y = _get_xy_data(x, y, table, exclude_attrs, target_attr)
+    x, y = get_xy_data(x, y, table, exclude_attrs, target_attr)
     dict_list = []
     max_score = 0
     # Initialize the best matcher. As of now set it to be the first matcher.
@@ -114,7 +114,7 @@ def cross_validation(matcher, x, y, metric, cv):
     return matcher, scores
 
 
-def _get_xy_data(x, y, table, exclude_attrs, target_attr):
+def get_xy_data(x, y, table, exclude_attrs, target_attr):
     """
     Gets the X, Y data from the input based on the given table, the
     exclude attributes and target attribute provided.
