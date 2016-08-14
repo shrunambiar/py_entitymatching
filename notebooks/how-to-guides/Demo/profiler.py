@@ -1,17 +1,6 @@
 import pandas as pd
 import seaborn as sns
-
-
 import matplotlib.pyplot as plt
-def print_full(x):
-    pd.set_option('display.max_rows', len(x))
-    print(x)
-    pd.reset_option('display.max_rows')
-
-
-def profile_attr_in_table(df, attribute, max_categories):
-    out_df = pd.DataFrame(columns=['Property', 'Value'])
-
 
 def profile_table(df, attribute, plot=True):
     out_df = pd.DataFrame(columns=['Property', 'Value'])
