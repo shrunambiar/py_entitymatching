@@ -1,4 +1,5 @@
 # coding=utf-8
+import logging
 import pandas as pd
 from sklearn.cross_validation import KFold, cross_val_score
 
@@ -10,6 +11,8 @@ from py_entitymatching.feature.autofeaturegen import get_features_for_matching
 from py_entitymatching.feature.extractfeatures import extract_feature_vecs
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.matcherselector.mlmatcherselection import get_xy_data
+
+logger = logging.getLogger(__name__)
 
 def _check_function(row, actual_label, pred_label, prob_nonmatch, prob_match,
                     prob_label):
@@ -25,7 +28,7 @@ def _check_function(row, actual_label, pred_label, prob_nonmatch, prob_match,
 def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
                   predict_col='predicted', pred_prob_col='prediction_prob',
                   actual_label_col = 'actual_label',
-                  random_state=None):
+                  random_state=None, verbose=False):
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
@@ -63,9 +66,9 @@ def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
                                       ltable, rtable, l_key, r_key,
                                       logger, verbose)
 
-    proj_ltable =  ltable[gh.list_diff(list(ltable.columns), [em.get_key(
+    proj_ltable =  ltable[gh.list_diff(list(ltable.columns), [cm.get_key(
         ltable)])]
-    proj_rtable =  rtable[gh.list_diff(list(rtable.columns), [em.get_key(
+    proj_rtable =  rtable[gh.list_diff(list(rtable.columns), [cm.get_key(
         rtable)])]
     feature_table = get_features_for_matching(proj_ltable, proj_rtable)
     feature_vectors = extract_feature_vecs(labeled_data, feature_table=feature_table,
@@ -96,11 +99,23 @@ def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
         label_test.insert(3, predict_col, preds)
         label_test.insert(4, pred_prob_col + '_nonmatch', predict_probs[:, 0])
         label_test.insert(5, pred_prob_col + '_match', predict_probs[:, 1])
-        label_test = label_test[label_test[actual_label_col != predict_col]]
-        label_test = label_test.apply(_check_function, axis=1)
+        label_test = label_test[label_test[actual_label_col] !=
+                                label_test[predict_col]]
+        # actual_label, pred_label, prob_nonmatch, prob_match, prob_label
+        label_test = label_test.apply(_check_function, args=(
+            actual_label_col, predict_col, pred_prob_col + '_nonmatch',
+            pred_prob_col + '_match', pred_prob_col), axis=1)
         list_prediction_dfs.append(label_test)
-    concatenated_dfs = pd.concat([list_prediction_dfs])
-    cm.copy_properties(labeled_data, concatenated_dfs)
+    concatenated_dfs = pd.concat(list_prediction_dfs)
 
+    out_cols = [key, actual_label_col, predict_col,
+                pred_prob_col]
+    out_cols.extend(gh.list_diff(list(labeled_data.columns), [key]))
+    out_df = concatenated_dfs[out_cols]
+    out_df.sort_values(pred_prob_col, ascending=False, inplace=True)
+    cm.copy_properties(labeled_data, out_df)
+
+    out_df.reset_index(inplace=True, drop=True)
+    return out_df
 
 

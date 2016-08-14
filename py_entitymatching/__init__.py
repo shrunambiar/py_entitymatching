@@ -48,6 +48,9 @@ from py_entitymatching.gui.table_gui import view_table, edit_table
 # # labeling
 from py_entitymatching.labeler.labeler import label_table
 
+# # debug labeler
+from py_entitymatching.debuglabeler.debuglabeler import debug_labeler
+
 # # feature related stuff
 from py_entitymatching.feature.simfunctions import *
 from py_entitymatching.feature.tokenizers import *
