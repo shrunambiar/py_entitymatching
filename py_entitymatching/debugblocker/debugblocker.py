@@ -1,17 +1,22 @@
-from collections import namedtuple
 import heapq as hq
 import logging
-import numpy
+from collections import namedtuple
 from operator import attrgetter
+
+import numpy
 import pandas as pd
 
 import py_entitymatching as em
 import py_entitymatching.catalog.catalog_manager as cm
+import py_entitymatching.utils.generic_helper as gh
 
 logger = logging.getLogger(__name__)
 
 
-def debug_blocker(candset, ltable, rtable, output_size=200,
+def debug_blocker(candset, ltable, rtable,
+                  l_output_attrs=None, r_output_attrs=None,
+                  l_output_prefix='ltable_', r_output_prefix='rtable_',
+                  output_size=200,
                   attr_corres=None, verbose=False):
     """
     This function debugs the blocker output and reports a list of potential
@@ -81,11 +86,15 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
                              ' to be done!')
 
     # Get table metadata.
-    l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
+    l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger,
+                                                 verbose)
 
     # Validate metadata
     cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
     cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+
+    # Validate output attrs
+    _validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
 
     # Check the user input field correst list (if exists) and get the raw
     # version of our internal correst list.
@@ -111,8 +120,10 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
     feature_list = _select_features(ltable_filtered, rtable_filtered, l_key)
 
     # Map the record key value to its index in the table.
-    lrecord_id_to_index_map = _get_record_id_to_index_map(ltable_filtered, l_key)
-    rrecord_id_to_index_map = _get_record_id_to_index_map(rtable_filtered, r_key)
+    lrecord_id_to_index_map = _get_record_id_to_index_map(ltable_filtered,
+                                                          l_key)
+    rrecord_id_to_index_map = _get_record_id_to_index_map(rtable_filtered,
+                                                          r_key)
 
     # Build the tokenized record list delimited by a white space on the
     # selected fields.
@@ -140,7 +151,10 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
         lrecord_list, rrecord_list, new_formatted_candidate_set, output_size)
 
     # Assemble the topk record list to a dataframe.
-    ret_dataframe = _assemble_topk_table(topk_heap, ltable_filtered, rtable_filtered)
+    ret_dataframe = _assemble_topk_table(topk_heap, ltable_filtered,
+                                         rtable_filtered, ltable, rtable,
+                                         l_output_attrs, r_output_attrs,
+                                         l_output_prefix, r_output_prefix)
     return ret_dataframe
 
 
@@ -149,15 +163,18 @@ def _validate_types(ltable, rtable, candidate_set, output_size,
                     attr_corres, verbose):
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input left table is not of type pandas data frame')
-        raise AssertionError('Input left table is not of type pandas data frame')
+        raise AssertionError(
+            'Input left table is not of type pandas data frame')
 
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input right table is not of type pandas data frame')
-        raise AssertionError('Input right table is not of type pandas data frame')
+        raise AssertionError(
+            'Input right table is not of type pandas data frame')
 
     if not isinstance(candidate_set, pd.DataFrame):
         logger.error('Input candidate set is not of type pandas dataframe')
-        raise AssertionError('Input candidate set is not of type pandas dataframe')
+        raise AssertionError(
+            'Input candidate set is not of type pandas dataframe')
 
     if not isinstance(output_size, int):
         logging.error('Output size is not of type int')
@@ -183,14 +200,23 @@ def _validate_types(ltable, rtable, candidate_set, output_size,
 
 
 # Assemble the topk heap to a dataframe.
-def _assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
-                         l_output_prefix='ltable_', r_output_prefix='rtable_'):
+def _assemble_topk_table(topk_heap, ltable_filtered, rtable_filtered, ltable,
+                         rtable, l_output_attrs, r_output_attrs,
+                         l_output_prefix, r_output_prefix,
+                         ret_key='_id'
+                         ):
     topk_heap.sort(key=lambda tup: tup[0], reverse=True)
     ret_data_col_name_list = ['_id', 'similarity']
+    # ltable_col_names = list(ltable_filtered.columns)
+    # rtable_col_names = list(rtable_filtered.columns)
+    # lkey = em.get_key(ltable_filtered)
+    # rkey = em.get_key(rtable_filtered)
+
     ltable_col_names = list(ltable.columns)
     rtable_col_names = list(rtable.columns)
     lkey = em.get_key(ltable)
     rkey = em.get_key(rtable)
+
     lkey_index = 0
     rkey_index = 0
     for i in range(len(ltable_col_names)):
@@ -203,32 +229,45 @@ def _assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
 
     ret_data_col_name_list.append(l_output_prefix + lkey)
     ret_data_col_name_list.append(r_output_prefix + rkey)
+    # ltable_col_names.remove(lkey)
+    # rtable_col_names.remove(rkey)
+
     ltable_col_names.remove(lkey)
     rtable_col_names.remove(rkey)
 
-    for i in range(len(ltable_col_names)):
-        ret_data_col_name_list.append(l_output_prefix + ltable_col_names[i])
-    for i in range(len(rtable_col_names)):
-        ret_data_col_name_list.append(r_output_prefix + rtable_col_names[i])
+    # for i in range(len(ltable_col_names)):
+    #     ret_data_col_name_list.append(l_output_prefix + ltable_col_names[i])
+    # for i in range(len(rtable_col_names)):
+    #     ret_data_col_name_list.append(r_output_prefix + rtable_col_names[i])
+
+    # for i in range(len(l_output_attrs)):
+    #     ret_data_col_name_list.append(l_output_prefix + l_output_attrs[i])
+    # for i in range(len(r_output_attrs)):
+    #     ret_data_col_name_list.append(r_output_prefix + r_output_attrs[i])
 
     ret_tuple_list = []
+    ltable_index = ltable.set_index(lkey, drop=False)
+    rtable_index = rtable.set_index(rkey, drop=False)
+
     for i in range(len(topk_heap)):
         tup = topk_heap[i]
-        lrecord = list(ltable.ix[tup[1]])
-        rrecord = list(rtable.ix[tup[2]])
+        # lrecord = list(ltable_filtered.ix[tup[1]])
+        # rrecord = list(rtable_filtered.ix[tup[2]])
+        lrecord = list(ltable_index.ix[tup[1]])
+        rrecord = list(rtable_index.ix[tup[2]])
+
         ret_tuple = [i, tup[0]]
         ret_tuple.append(lrecord[lkey_index])
         ret_tuple.append(rrecord[rkey_index])
-        for j in range(len(lrecord)):
-            if j != lkey_index:
-                ret_tuple.append(lrecord[j])
-        for j in range(len(rrecord)):
-            if j != rkey_index:
-                ret_tuple.append(rrecord[j])
+        # for j in range(len(lrecord)):
+        #     if j != lkey_index:
+        #         ret_tuple.append(lrecord[j])
+        # for j in range(len(rrecord)):
+        #     if j != rkey_index:
+        #         ret_tuple.append(rrecord[j])
         ret_tuple_list.append(ret_tuple)
 
     data_frame = pd.DataFrame(ret_tuple_list)
-    # When the ret data frame is empty, we cannot assign column names.
     if len(data_frame) == 0:
         return data_frame
 
@@ -237,6 +276,15 @@ def _assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
     rkey = em.get_key(rtable)
     cm.set_candset_properties(data_frame, ret_key, l_output_prefix + lkey,
                               r_output_prefix + rkey, ltable, rtable)
+
+    data_frame = gh.add_output_attributes(data_frame, l_output_attrs,
+                                          r_output_attrs, l_output_prefix,
+                                          r_output_prefix, validate=False,
+                                          copy_props=True,
+                                          delete_from_catalog=True,
+                                          verbose=False)
+    # When the ret data frame is empty, we cannot assign column names.
+
 
     return data_frame
 
@@ -262,7 +310,7 @@ def _topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
     topk_heap = []
 
     while len(prefix_events) > 0:
-        if len(topk_heap) == output_size and\
+        if len(topk_heap) == output_size and \
                         topk_heap[0][0] >= prefix_events[0][0] * -1:
             break
         event = hq.heappop(prefix_events)
@@ -282,7 +330,8 @@ def _topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                     if pair in compared_set:
                         continue
                     sim = _jaccard_sim(
-                        set(lrecord_list[rec_idx]), set(rrecord_list[r_rec_idx]))
+                        set(lrecord_list[rec_idx]),
+                        set(rrecord_list[r_rec_idx]))
                     if len(topk_heap) == output_size:
                         hq.heappushpop(topk_heap, (sim, rec_idx, r_rec_idx))
                     else:
@@ -308,7 +357,8 @@ def _topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                     if pair in compared_set:
                         continue
                     sim = _jaccard_sim(
-                        set(lrecord_list[l_rec_idx]), set(rrecord_list[rec_idx]))
+                        set(lrecord_list[l_rec_idx]),
+                        set(rrecord_list[rec_idx]))
                     if len(topk_heap) == output_size:
                         hq.heappushpop(topk_heap, (sim, l_rec_idx, rec_idx))
                     else:
@@ -400,13 +450,14 @@ def _filter_corres_list(ltable, rtable, ltable_key, rtable_key,
         lcol_name = corres_list[i][0]
         rcol_name = corres_list[i][1]
         # Filter the pair where both fields are numeric types.
-        if ltable_dtypes[ltable_col_dict[lcol_name]] != numpy.dtype('O')\
-                and rtable_dtypes[rtable_col_dict[rcol_name]] != numpy.dtype('O'):
+        if ltable_dtypes[ltable_col_dict[lcol_name]] != numpy.dtype('O') \
+                and rtable_dtypes[rtable_col_dict[rcol_name]] != numpy.dtype(
+                    'O'):
             if lcol_name != ltable_key and rcol_name != rtable_key:
                 corres_list.pop(i)
 
-    if len(corres_list) == 1 and corres_list[0][0] == ltable_key\
-                             and corres_list[0][1] == rtable_key:
+    if len(corres_list) == 1 and corres_list[0][0] == ltable_key \
+            and corres_list[0][1] == rtable_key:
         raise AssertionError('The field correspondence list is empty after'
                              ' filtering: please verify your correspondence'
                              ' list, or check if each field is of numeric'
@@ -567,26 +618,28 @@ def _replace_nan_to_empty(field):
 # it's difficult for us to know if a tuple pair is in the candidate
 # set or not. We will use the reformatted candidate set in the topk
 # similarity join.
-def _index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
+def _index_candidate_set(candidate_set, lrecord_id_to_index_map,
+                         rrecord_id_to_index_map, verbose):
     new_formatted_candidate_set = set()
     if len(candidate_set) == 0:
         return new_formatted_candidate_set
 
     # Get metadata
-    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key =\
+    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
     # validate metadata
     cm._validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable,
-                                     ltable, rtable, l_key, r_key,
-                                     logger, verbose)
+                                      ltable, rtable, l_key, r_key,
+                                      logger, verbose)
 
     ltable_key_data = list(candidate_set[fk_ltable])
     rtable_key_data = list(candidate_set[fk_rtable])
 
     for i in range(len(ltable_key_data)):
-        new_formatted_candidate_set.add((lrecord_id_to_index_map[ltable_key_data[i]],
-                                         rrecord_id_to_index_map[rtable_key_data[i]]))
+        new_formatted_candidate_set.add(
+            (lrecord_id_to_index_map[ltable_key_data[i]],
+             rrecord_id_to_index_map[rtable_key_data[i]]))
 
     return new_formatted_candidate_set
 
@@ -628,10 +681,28 @@ def _generate_prefix_events_impl(record_list, prefix_events, table_indicator):
         for j in range(length):
             threshold = _calc_threshold(j, length)
             hq.heappush(prefix_events,
-                        (-1.0 * threshold, table_indicator, i, j, record_list[i][j]))
+                        (-1.0 * threshold, table_indicator, i, j,
+                         record_list[i][j]))
 
 
 # Calculate the corresponding topk similarity join of a token in a record.
 # Refer to "top-k set similarity join" by Xiao et al. for details.
 def _calc_threshold(token_index, record_length):
     return 1 - token_index * 1.0 / record_length
+
+
+def _validate_output_attrs(ltable, rtable, l_output_attrs,
+                           r_output_attrs):
+    if l_output_attrs:
+        if not isinstance(l_output_attrs, list):
+            l_output_attrs = [l_output_attrs]
+        assert set(l_output_attrs).issubset(
+            ltable.columns) == True, 'Left output attributes are not in the left ' \
+                                     'table'
+
+    if r_output_attrs:
+        if not isinstance(r_output_attrs, list):
+            r_output_attrs = [r_output_attrs]
+        assert set(r_output_attrs).issubset(
+            rtable.columns) == True, 'Right output attributes are not in the right' \
+                                     ' table'

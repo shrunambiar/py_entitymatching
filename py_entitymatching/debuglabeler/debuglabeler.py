@@ -27,7 +27,7 @@ def _check_function(row, actual_label, pred_label, prob_nonmatch, prob_match,
 
 def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
                   predict_col='predicted', pred_prob_col='prediction_prob',
-                  actual_label_col = 'actual_label',
+                  actual_label_col = 'user_label',
                   random_state=None, verbose=False):
     # Validate input parameters
 
@@ -80,7 +80,7 @@ def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
     list_prediction_dfs = []
 
     for train_indices, pred_indices in folds:
-        rf = RFMatcher()
+        rf = RFMatcher(random_state=random_state)
         train = feature_vectors.iloc[train_indices]
         test = feature_vectors.iloc[pred_indices]
         label_test = labeled_data.iloc[pred_indices]
@@ -112,7 +112,7 @@ def debug_labeler(labeled_data, exclude_attrs, target_attr, k=5,
                 pred_prob_col]
     out_cols.extend(gh.list_diff(list(labeled_data.columns), [key]))
     out_df = concatenated_dfs[out_cols]
-    out_df.sort_values(pred_prob_col, ascending=False, inplace=True)
+    out_df = out_df.sort_values(pred_prob_col, ascending=False)
     cm.copy_properties(labeled_data, out_df)
 
     out_df.reset_index(inplace=True, drop=True)
