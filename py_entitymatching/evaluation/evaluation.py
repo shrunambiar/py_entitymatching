@@ -183,7 +183,7 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     accuracy_results['false_pos_ls'] = false_pos_ls
     accuracy_results['pred_neg_num'] = num_false_negatives + num_true_negatives
     accuracy_results['false_neg_num'] = num_false_negatives
-    accuracy_results['false_neg_ls'] = false_neg_ls
+    accuracy_results['false_neg_ls'] = sorted(false_neg_ls)
     return accuracy_results
 
 

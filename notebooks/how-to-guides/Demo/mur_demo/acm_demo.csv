@@ -1180,7 +1180,7 @@ r1177,Temporal FDs on complex objects,Jef Wijsen,ACM Transactions on Database Sy
 r1178,The Aqua approximate query answering system,"Swarup Acharya, Phillip B. Gibbons, Viswanath Poosala, Sridhar Ramaswamy",International Conference on Management of Data,1999
 r1179,VERSANT replication: supporting fault-tolerant object databases,"Yuh-Ming Shyy, H. Stephen Au-Yeung, C. P. Chou",International Conference on Management of Data,1995
 r1180,ADAM: a testbed for exploring the use of data mining in intrusion detection,"Daniel Barbará, Julia Couto, Sushil Jajodia, Ningning Wu",ACM SIGMOD Record,2001
-r1181,Fast Incremental Indexing for Full-Text Information Retrieval,"Eric W. Brown, James P. Callan, W. Bruce Croft",Very Large Data Bases,1994
+r1181,Fast Incremental Indexing For Full-Text Information Retrieval,"Eric W. Brown, James P. Callan, W. Bruce Croft",Very Large Data Bases,1994
 r1182,Turbo-charging vertical mining of large databases,"Pradeep Shenoy, Jayant R. Haritsa, S. Sundarshan, Gaurav Bhalotia, Mayank Bawa, Devavrat Shah",International Conference on Management of Data,2000
 r1183,Enhanced abstract data types in object-relational databases,Praveen Seshadri,The VLDB Journal — The International Journal on Very Large Data Bases,1998
 r1184,A Multidatabase System for Tracking and Retrieval of Financial Data,"Munir Cochinwala, John Bradley",Very Large Data Bases,1994
@@ -1748,7 +1748,7 @@ r1745,Data mining-based intrusion detectors: an overview of the columbia IDS pro
 r1746,Building Scalable Internet Applications with Oracle8i Server,"Julie Basu, José Alberto Fernández, Olga Peschansky",Very Large Data Bases,2000
 r1747,The SPIFFI scalable video-on-demand system,"Craig S. Freedman, David J. DeWitt",International Conference on Management of Data,1995
 r1748,Efficient and cost-effective techniques for browsing and indexing large video databases,"JungHwan Oh, Kien A. Hua",International Conference on Management of Data,2000
-r1749,A survey and critique of advanced transaction models,C. Mohan,International Conference on Management of Data,1994
+r1749,a survey and critique of advanced transaction models,c. mohan,International Conference on Management of Data,1994
 r1750,A logical foundation for deductive object-oriented databases,"Mengchi Liu, Gillian Dobbie, Tok Wang Ling",ACM Transactions on Database Systems (TODS),2002
 r1751,Storage and Retrieval of XML Data Using Relational Databases,"Surajit Chaudhuri, Kyuseok Shim",Very Large Data Bases,2001
 r1752,A framework for providing consistent and recoverable agent-based access to heterogeneous mobile databases,"Evaggelia Pitoura, Bharat Bhargava",ACM SIGMOD Record,1995
