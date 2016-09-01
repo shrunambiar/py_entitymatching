@@ -684,7 +684,7 @@ class RuleBasedBlocker(Blocker):
             is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(
                 conjunct, rule_name)
 
-            if l_tok == 'dlm_dc0':
+            if l_tok == 'dlm_dc_sp':
                 tokenizer = WhitespaceTokenizer(return_set=True)
             elif l_tok == 'qgm_3':
                 tokenizer = QgramTokenizer(qval=3, return_set=True)

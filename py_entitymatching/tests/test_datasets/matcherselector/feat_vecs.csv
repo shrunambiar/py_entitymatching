@@ -1,4 +1,4 @@
-_id,ltable.id,rtable.id,title_title_jac_qgm_3_qgm_3,title_title_cos_dlm_dc0_dlm_dc0,title_title_mel,title_title_lev,authors_authors_jac_qgm_3_qgm_3,authors_authors_cos_dlm_dc0_dlm_dc0,authors_authors_mel,authors_authors_lev,year_year_exm,year_year_anm,year_year_lev,gold
+_id,ltable.id,rtable.id,title_title_jac_qgm_3_qgm_3,title_title_cos_dlm_dc_sp_dlm_dc_sp,title_title_mel,title_title_lev,authors_authors_jac_qgm_3_qgm_3,authors_authors_cos_dlm_dc_sp_dlm_dc_sp,authors_authors_mel,authors_authors_lev,year_year_exm,year_year_anm,year_year_lev,gold
 0,conf/sigmod/AbadiCCCCEGHMRSSTXYZ03,335476,0.011363636363636364,0.0,0.5051726051726052,43.0,0.10588235294117647,0.10690449676496974,0.5663277805685825,181.0,0.0,0.9985022466300549,2.0,0
 1,conf/sigmod/AbadiCCCCEGHMRSSTXYZ03,672966,0.1532258064516129,0.20412414523193154,0.6450537075537075,80.0,0.032520325203252036,0.0563436169819011,0.5427450470368925,203.0,0.0,0.9955067398901648,6.0,0
 2,conf/sigmod/AcharyaAFZ95,223816,0.5666666666666667,0.24999999999999994,0.8959994700582935,7.0,0.7536231884057971,0.6708203932499369,0.7264027437940482,53.0,1.0,1.0,2.0,1

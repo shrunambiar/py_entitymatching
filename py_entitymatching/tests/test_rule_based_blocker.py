@@ -38,11 +38,11 @@ expected_ids_2_and_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
 
 # filterable rule with multiple conjuncts - (Jaccard, 3g) & (cosine, ws)
 rule_4 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3',
-          'name_name_cos_dlm_dc0_dlm_dc0(ltuple, rtuple) < 0.25']
+          'name_name_cos_dlm_dc_sp_dlm_dc_sp(ltuple, rtuple) < 0.25']
 expected_ids_4 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
 # rule returning an empty candset
-rule_5 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.5']
+rule_5 = ['name_name_jac_dlm_dc_sp_dlm_dc_sp(ltuple,rtuple) < 0.5']
 
 # non filterable rule with single conjunct
 rule_6 = ['name_name_mel(ltuple,rtuple) < 0.6']
@@ -61,7 +61,7 @@ expected_ids_6_and_7 = [('a2', 'b1'), ('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'),
                        ('a3', 'b6'), ('a4', 'b2'), ('a5', 'b5')]
 
 # rule with supported sim_fn but unsupported op for filters (returns empty set)
-rule_8 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) >= 0']
+rule_8 = ['name_name_jac_dlm_dc_sp_dlm_dc_sp(ltuple,rtuple) >= 0']
 
 # rule with supported sim_fn but unsupported op (returns empty set)
 rule_9 = ['zipcode_zipcode_lev_dist(ltuple,rtuple) <= 2']
@@ -364,7 +364,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_rule_wi_diff_tokenizers(self):
-        feature_string = "jaccard(qgm_3(ltuple['address']), dlm_dc0(rtuple['address']))"
+        feature_string = "jaccard(qgm_3(ltuple['address']), dlm_dc_sp(rtuple['address']))"
         f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
                                 get_sim_funs_for_blocking())
         f_dict['is_auto_generated'] = True
@@ -376,7 +376,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         validate_data(C)
     
     def test_rb_block_tables_rule_wi_dice_sim_fn(self):
-        feature_string = "dice(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
+        feature_string = "dice(dlm_dc_sp(ltuple['name']), dlm_dc_sp(rtuple['name']))"
         f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
                                 get_sim_funs_for_blocking())
         f_dict['is_auto_generated'] = True
@@ -388,7 +388,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         validate_data(C)
     
     def test_rb_block_tables_rule_wi_overlap_coeff_sim_fn(self):
-        feature_string = "overlap_coeff(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
+        feature_string = "overlap_coeff(dlm_dc_sp(ltuple['name']), dlm_dc_sp(rtuple['name']))"
         f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
                                 get_sim_funs_for_blocking())
         f_dict['is_auto_generated'] = True

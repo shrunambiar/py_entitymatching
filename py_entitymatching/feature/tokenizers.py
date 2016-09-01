@@ -117,7 +117,17 @@ def _get_single_arg_tokenizers(q=[2, 3], dlm_char=[' ']):
         dlm_fn_list = [_make_tok_delim(k) for k in dlm_char]
 
         # Update the tokenizer name, function lists
-        dlm_names = ['dlm_dc' + str(i) for i in range(len(dlm_char))]
+        dlm_names = []
+        cnt = 0
+        for i in dlm_char:
+            if i == ' ':
+                dlm_names.append('dlm_dc_sp')
+            elif i == ',':
+                dlm_names.append('dlm_dc_com')
+            else:
+                dlm_names.append('dlm_dc' + str(cnt))
+                cnt += 1
+        # dlm_names = ['dlm_dc' + str(i) for i in range(len(dlm_char))]
         names.extend(dlm_names)
         functions.extend(dlm_fn_list)
 

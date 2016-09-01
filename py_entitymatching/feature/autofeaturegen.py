@@ -417,15 +417,15 @@ def _get_feat_lkp_tbl():
 
     # Features for type str_bt_1w_5w
     lookup_table['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                                    ('cosine', 'dlm_dc0', 'dlm_dc0'),
-                                    ('jaccard', 'dlm_dc0', 'dlm_dc0'),
+                                    ('cosine', 'dlm_dc_sp', 'dlm_dc_sp'),
+                                    ('jaccard', 'dlm_dc_sp', 'dlm_dc_sp'),
                                     ('monge_elkan'), ('lev_dist'), ('lev_sim'),
                                     ('needleman_wunsch'),
                                     ('smith_waterman')]  # dlm_dc0 is the concrete space tokenizer
 
     # Features for type str_bt_5w_10w
     lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                                     ('cosine', 'dlm_dc0', 'dlm_dc0'),
+                                     ('cosine', 'dlm_dc_sp', 'dlm_dc_sp'),
                                      ('monge_elkan'), ('lev_dist'), ('lev_sim')]
 
     # lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
@@ -433,7 +433,7 @@ def _get_feat_lkp_tbl():
     #                                  ('monge_elkan')]
     # Features for type str_gt_10w
     lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                                  ('cosine', 'dlm_dc0', 'dlm_dc0')]
+                                  ('cosine', 'dlm_dc_sp', 'dlm_dc_sp')]
 
     # Features for NUMERIC type
     lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev_dist'),
