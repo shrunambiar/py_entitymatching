@@ -162,15 +162,15 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
         return False
 
     if any(pd.isnull(df_foreign[attr_foreign])):
-        logger.warning('The attribute %s in foreign table contains null values' %attr_foreign)
+        logger.warning('The attribute {0} in foreign table contains null values'.format(attr_foreign))
         return False
 
     uniq_fk_vals = set(pd.unique(df_foreign[attr_foreign]))
     base_attr_vals = df_base[attr_base].values
     d = uniq_fk_vals.difference(base_attr_vals)
     if len(d) > 0:
-        logger.warning('For some attr. values in (%s) in the foreign table there are no values in '
-                       '(%s) in the base table' %(attr_foreign, attr_base))
+        logger.warning('For some attr. values in {0} in the foreign table there are no values in '
+                       '{1} in the base table'.format(attr_foreign, attr_base))
         return False
 
     # check whether those values are unique in the base table.
@@ -178,8 +178,8 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
     status = is_key_attribute(t, attr_base)
 
     if status == False:
-        logger.warning('Key attr. constraint for the subset of values (derived from. %s)'
-                       'in %s is not satisifed' %(attr_foreign, attr_base))
+        logger.warning('Key attr. constraint for the subset of values (derived from. {0})'
+                       'in {1} is not satisifed'.format(attr_foreign, attr_base))
         return False
     else:
         return True

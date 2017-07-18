@@ -154,15 +154,13 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
 
     # Check if the fk_ltable contain any missing values
     if ch.does_contain_missing_vals(data_frame, fk_ltable):
-        logger.error('The fk_ltable (%s) contains missing values' %fk_ltable)
-        raise AssertionError('The fk_ltable (%s) contains missing values' %
-                             fk_ltable)
+        logger.error('The fk_ltable {0} contains missing values'.format(fk_ltable))
+        raise AssertionError('The fk_ltable {0} contains missing values'.format(fk_ltable))
 
     # Check if the fk_rtable contain any missing values
     if ch.does_contain_missing_vals(data_frame, fk_rtable):
-        logger.error('The fk_rtable (%s) contains missing values' %fk_rtable)
-        raise AssertionError('The fk_rtable (%s) contains missing values' %
-                             fk_rtable)
+        logger.error('The fk_rtable {0} contains missing values'.format(fk_rtable))
+        raise AssertionError('The fk_rtable {0} contains missing values'.format(fk_rtable))
 
 
     # Set the index values to fk_ltable and fk_rtable

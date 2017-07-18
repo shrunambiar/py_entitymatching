@@ -85,8 +85,8 @@ def read_csv_metadata(file_path, **kwargs):
 
     # # Check if the given path is valid.
     if not os.path.exists(file_path):
-        logger.error('File does not exist at path %s' % file_path)
-        raise AssertionError('File does not exist at path %s' % file_path)
+        logger.error('File does not exist at path {0}'.format(file_path))
+        raise AssertionError('File does not exist at path {0}'.format(file_path))
 
     # Check if the user has specified the metadata file's extension.
     extension = kwargs.pop('metadata_extn', None)
@@ -234,8 +234,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
             data_frame.to_csv(file_path, **kwargs)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting' % file_path)
-        raise AssertionError('Cannot write in the file path %s' % file_path)
+        logger.error('Cannot write in the file path {0}; Exiting'.format(file_path))
+        raise AssertionError('Cannot write in the file path {0}'.format(file_path))
 
     # repeat the process (as writing the DataFrame) to write the metadata.
 
@@ -243,15 +243,15 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     can_write, file_exists = _check_file_path(metadata_filename)
     if can_write:
         if file_exists:
-            logger.warning('Metadata file already exists at %s. Overwriting '
-                           'it', metadata_filename)
+            logger.warning('Metadata file already exists at {0}. Overwriting '
+                           'it'.format(metadata_filename))
             _write_metadata(data_frame, metadata_filename)
         else:
             _write_metadata(data_frame, metadata_filename)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting' % file_path)
-        raise AssertionError('Cannot write in the file path %s' % file_path)
+        logger.error('Cannot write in the file path {0}; Exiting'.format(file_path))
+        raise AssertionError('Cannot write in the file path {0}'.format(file_path))
 
     return True
 
@@ -376,8 +376,8 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
                 # Warn the users if the metadata dict had a valid value,
                 # but the kwargs sets it to None.
                 logger.warning(
-                    '%s key had a value (%s)in file but input arg is set to '
-                    'None' % (property_name, metadata[property_name]))
+                    '{0} key had a value ({1}) in file but input arg is set to '
+                    'None'.format(property_name, metadata[property_name]))
                 # Remove the property from the dictionary.
                 metadata.pop(property_name)  # remove the key-value pair
 
@@ -397,7 +397,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
                 metadata[property_name] = property_value
             else:
                 # Warn the users if the properties in the kwargs is set to None.
-                logger.warning('Metadata %s is set to None', property_name)
+                logger.warning('Metadata {0} is set to None'.format(property_name))
                 # Remove the property from the metadata dict.
                 metadata.pop(property_name, None)
 

@@ -7,8 +7,6 @@ import pandas as pd
 import six
 from py_entitymatching.utils.validation_helper import validate_object_type
 
-from IPython.display import display
-
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
 import py_entitymatching.feature.simfunctions as sim
@@ -140,13 +138,12 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 
         # Generate a feature only if the attribute types are same
         if l_attr_type != r_attr_type:
-            logger.info('py_entitymatching types: %s type (%s) and %s type (%s) '
+            logger.info('py_entitymatching types: {0} type ({1}) and {2} type ({3}) '
                            'are different.'
                            'If you want to set them to be same and '
                            'generate features, '
                            'update output from get_attr_types and '
-                           'use get_features command.\n.'
-                           % (ac[0], l_attr_type, ac[1], r_attr_type))
+                           'use get_features command.\n.'.format(ac[0], l_attr_type, ac[1], r_attr_type))
             # features_1 = _get_features_for_type(l_attr_type)
             # features_2 = _get_features_for_type(r_attr_type)
             # features = set(features_1).union(features_2)
@@ -710,13 +707,12 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
 
         # Generate a feature only if the attribute types are same
         if l_attr_type != r_attr_type:
-            logger.info('py_entitymatching types: %s type (%s) and %s type (%s) '
+            logger.info('py_entitymatching types: {0} type ({1}) and {2} type ({3}) '
                         'are different.'
                         'If you want to set them to be same and '
                         'generate features, '
                         'update output from get_attr_types and '
-                        'use get_features command.\n.'
-                        % (ac[0], l_attr_type, ac[1], r_attr_type))
+                        'use get_features command.\n.'.format(ac[0], l_attr_type, ac[1], r_attr_type))
             features = ['N/A']
         else:
             # Generate features
@@ -749,7 +745,11 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
         corres_feat_df = pd.DataFrame(corres_features_list, columns=labels)
 
         # display the pandas dataframe
-        display(corres_feat_df)
+        try:
+            from IPython.display import display
+            display(corres_feat_df)
+        except ImportError:
+            print(corres_feat_df)
 
     # Ask user if the inferred types are satisfactory. Repeat until satisfactory answer is reached
     while True:

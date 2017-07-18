@@ -94,10 +94,10 @@ def _validate_inputs(table, label_column_name, verbose):
 
     # # Check if the label column name is already present in the input table
     if ch.check_attrs_present(table, label_column_name):
-        logger.error('The label column name (%s) is already present in the '
-                     'input table', label_column_name)
-        raise AssertionError('The label column name (%s) is already present '
-                             'in the input table', label_column_name)
+        logger.error('The label column name {0} is already present in the '
+                     'input table'.format(label_column_name))
+        raise AssertionError('The label column name {0} is already present '
+                             'in the input table'.format(label_column_name))
 
     # Now, validate the metadata for the input DataFrame as we have to copy
     # these properties to the output DataFrame
