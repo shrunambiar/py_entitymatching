@@ -47,6 +47,12 @@ from py_entitymatching.gui.table_gui import view_table, edit_table
 
 # # labeling
 from py_entitymatching.labeler.labeler import label_table
+# # new labeler and helper functions
+try:
+    import PyQt5
+    from py_entitymatching.labeler.new_labeler.new_labeler import new_label_table
+except:
+    None
 
 # # feature related stuff
 from py_entitymatching.feature.simfunctions import *
@@ -95,8 +101,6 @@ from py_entitymatching.utils.generic_helper import get_install_path, load_datase
 from py_entitymatching.utils.pandas_helper import filter_rows, project_cols, \
     mutate_col, rename_col, preserve_metadata, drop_cols
 
-# # new labeler and helper functions
-from py_entitymatching.labeler.new_labeler.new_labeler import new_label_table
 
 
 # global vars
