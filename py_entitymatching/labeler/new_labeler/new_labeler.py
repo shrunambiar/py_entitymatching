@@ -1,11 +1,4 @@
 import pandas as pd
-# from OpenGL import GL
-# from PyQt5.QtCore import QFile
-# from PyQt5.QtCore import QIODevice
-# from PyQt5.QtCore import pyqtSlot
-# from PyQt5.QtWebChannel import QWebChannel
-# from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage, QWebEngineScript
-# from PyQt5.QtWidgets import QApplication
 
 # import PyQt5
 try:
@@ -18,6 +11,7 @@ try:
 except ImportError:
     raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                           'GUI related functions in py_entitymatching.')
+
 
 from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
 from py_entitymatching.labeler.new_labeler.controller.LabelUpdateController import LabelUpdateController

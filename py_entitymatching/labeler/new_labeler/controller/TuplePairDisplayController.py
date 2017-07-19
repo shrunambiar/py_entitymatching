@@ -193,8 +193,8 @@ class TuplePairDisplayController(QObject):
         """
         # todo WINDOWS
         path = save_file_name.split("/")
-        path.remove("/")
-        path.remove("")
+        #path.remove("/")
+        #path.remove("")
 
         if os.path.isdir("/".join(path[:len(path) - 1])):
             ApplicationContext.save_file_name = save_file_name
