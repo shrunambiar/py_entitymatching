@@ -8,7 +8,7 @@
 
     // The project's homepage
     //"project_url": "https://github.com/anhaidgroup/magellan/",
-    "project_url": "https://github.com/anhaidgroup/magellan/",
+    "project_url": "https://github.com/anhaidgroup/py_entitymatching/",
 
     // The URL or local path of the source code repository for the
     // project being benchmarked
@@ -54,6 +54,7 @@
          "six":[],
          "scikit-learn":[],
          "cloudpickle":[],
+         "ipython":[],
          "joblib": [],
 	 "pip+py_stringmatching": [],
          "pip+pyprind": []
